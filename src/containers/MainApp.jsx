@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React from 'react'
 import {useRecoilValue} from 'recoil'
 import {userState} from '../App'
@@ -5,6 +6,10 @@ import {userState} from '../App'
 export default function MainApp() {
 
     const checkLogin = () => {
+    //    fetch('http://localhost:3001/anything', {credentials: 'include'})
+    //    .then(res => res.json())
+    //    .then(console.log)
+    //     debugger
     }
 
     const user = useRecoilValue(userState)

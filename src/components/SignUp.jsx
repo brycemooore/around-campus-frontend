@@ -64,7 +64,7 @@ export default function SignUp() {
   const history = useHistory()
   const [errors, setErrors] = useState({})
 
-  const onSubmitForm = async (e) => {
+  const onSubmitForm = (e) => {
       e.preventDefault();
       console.log(stateUser)
       const user = {
@@ -76,12 +76,18 @@ export default function SignUp() {
           password_confirmation: password_confirmation,
       }
 
-      
-
       try{
-        const res = await axios.post('/signup', {user, school_id: 1})
+        const res = await axios.post('/signup', {user, school_id:1})
+        debugger
         setUser({...res.data})
-        history.push('/')
+        try{
+          const loginRes = await axios.post('/login', {user})
+          console.log(loginRes)
+          history.push('/')
+         }
+         catch(errors){
+           console.log(errors)
+         }
       }
       catch(error){
         console.log(error.response.data)

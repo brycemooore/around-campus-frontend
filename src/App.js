@@ -9,6 +9,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from "recoil";
+import RecoilizeDebugger from 'recoilize'
 
 export const userState = atom({
   key: 'userState',
@@ -18,6 +19,7 @@ export const userState = atom({
 function App() {
   return (
     <RecoilRoot>
+      <RecoilizeDebugger />
       <Router>
         <Switch>
           <Route exact path="/" component={MainApp} />
