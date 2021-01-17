@@ -14,6 +14,8 @@ import axios from 'axios'
 import {useRecoilState} from 'recoil';
 import userState from '../atoms/userAtom';
 import {useHistory} from 'react-router-dom'
+import LoggedInState from '../atoms/loggedInAtom'
+import { Link as LinkTo } from "react-router-dom";
 
 
 
@@ -63,8 +65,9 @@ export default function SignUp() {
   const [stateUser, setUser] = useRecoilState(userState)
   const history = useHistory()
   const [errors, setErrors] = useState({})
+  const [loggedIn, setLoggedIn] = useRecoilState(LoggedInState)
 
-  const onSubmitForm = (e) => {
+  const onSubmitForm = async (e) => {
       e.preventDefault();
       console.log(stateUser)
       const user = {
@@ -79,15 +82,10 @@ export default function SignUp() {
       try{
         const res = await axios.post('/signup', {user, school_id:1})
         debugger
-        setUser({...res.data})
-        try{
-          const loginRes = await axios.post('/login', {user})
-          console.log(loginRes)
-          history.push('/')
-         }
-         catch(errors){
-           console.log(errors)
-         }
+        setUser({...res.data.user})
+        localStorage.token = res.data.jwt
+        setLoggedIn(true)
+        history.push('/home')
       }
       catch(error){
         console.log(error.response.data)
@@ -208,9 +206,9 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
+            <LinkTo style={{textDecoration: 'none'}} to="/login">
+                <Link variant="body2">{"Already have an account? Login"}</Link>
+              </LinkTo>
             </Grid>
           </Grid>
         </form>
