@@ -11,7 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import userState from "../atoms/userAtom";
 import { useHistory } from "react-router-dom";
 import LoggedInState from "../atoms/loggedInAtom";
@@ -59,9 +59,9 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [stateUser, setUser] = useRecoilState(userState);
+  const  setUser = useSetRecoilState(userState);
   const history = useHistory();
-  const [loggedIn, setLoggedIn] = useRecoilState(LoggedInState);
+  const setLoggedIn = useSetRecoilState(LoggedInState);
 
   const onSubmitForm = async (e) => {
     e.preventDefault();

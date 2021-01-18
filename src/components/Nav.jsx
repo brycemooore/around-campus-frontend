@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import MenuDrawer from './MenuDrawer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +22,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenuOpen = () => {
+    setMenuOpen(!menuOpen)
+  }
 
   return (
     <div className={classes.root}>
@@ -29,9 +35,10 @@ export default function ButtonAppBar() {
         <Typography variant="h6" className={classes.title} color="primary">
             Around Campus
           </Typography>
-          <IconButton edge="start" className={classes.menuButton} color="primary" aria-label="menu">
+          <IconButton onClick={toggleMenuOpen} edge="start" className={classes.menuButton} color="primary" aria-label="menu">
             <MenuIcon />
           </IconButton>
+          <MenuDrawer toggle={toggleMenuOpen} menuOpen={menuOpen}/>
         </Toolbar>
       </AppBar>
     </div>
