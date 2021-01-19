@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    width: "100%"
+    width: "100%",
+    boxShadow: 0
   },
   bullet: {
     display: 'inline-block',
@@ -28,7 +29,7 @@ export default function FeedHeader(props) {
   const classes = useStyles();
 
   return (
-    <Card  boxShadow={0} className={classes.root}>
+    <Card className={classes.root}>
       <CardContent>
         <Typography className={classes.title} color="primary" gutterBottom>
           {"Posts from " + (props.school ? props.school.name : "Around Campus")}
