@@ -1,12 +1,15 @@
 import axios from "axios";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import userState from "../atoms/userAtom";
 import LoggedInState from "../atoms/loggedInAtom";
-import {Redirect} from 'react-router-dom';
-import Nav from '../components/Nav'
-import PostButton from '../components/PostButton'
+import { Redirect } from "react-router-dom";
+import Nav from "../components/Nav";
+import PostButton from "../components/PostButton";
 import { makeStyles } from "@material-ui/core/styles";
+import {List} from '@material-ui/core'
+import Post from '../components/Post'
+import FeedHeader from '../components/FeedHeader'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,28 +22,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function MainApp() {
   const user = useRecoilValue(userState);
-  const loggedIn = useRecoilValue(LoggedInState)
+  const loggedIn = useRecoilValue(LoggedInState);
   const classes = useStyles();
+  const [posts, setPosts] = useState([]);
+
+  const generatePosts = () => {
+    return posts.map((post, index) => {
+      return <Post  key={index} post={post}/>
+    })
+  }
+
+  const addPost = (post) => {
+    setPosts([post, ...posts])
+  }
 
   const getPosts = async () => {
-    const res = await axios.get('/posts');
-  }
+    const res = await axios.get("/posts");
+    setPosts(res.data)
+  };
+  
+  useEffect(() => {
+    getPosts()
+  }, [])
 
   return (
     <div className={classes.root}>
-        {loggedIn ? 
-      (<div>
-          <div>
-              <Nav />
-            </div>
+      {loggedIn ? (
         <div>
-        <button onClick={getPosts}>Hello</button>
-        {user.username}
-        <PostButton user={user}/>
+          <Nav />
+          <FeedHeader school={user.school}/>
+          <List>
+            {generatePosts()}
+          </List>
+          <PostButton addPost={addPost} user={user} />
         </div>
-      </div>) : <Redirect to="/" />}
+      ) : (
+        <Redirect to="/" />
+      )}
     </div>
   );
 }

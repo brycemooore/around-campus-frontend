@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import PostPage from './components/PostPopup'
 
 function App() {
   const setLoggedIn = useSetRecoilState(loggedInState);
@@ -53,6 +54,7 @@ function App() {
         <Route path="/signup" component={SignUp} />
         <Route path="/login" component={Login} />
         <Route path="/home" component={MainApp} />
+        <Route path="/posts/:id" component={PostPage} />
       </Switch>
     </ThemeProvider>
     </div>

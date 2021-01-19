@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
+      position: "fixed"
     },
   },
   extendedIcon: {
@@ -47,7 +48,7 @@ export default function PostButton(props) {
     
     try{
         const res = await axios.post('/posts', post)
-        console.log(res)
+        props.addPost(res.data)
         handleClose()
     }
     catch(error){
