@@ -45,7 +45,7 @@ export default function MessagesContainer() {
 
   useEffect(() => {
     setHeader(conversations[currentConvo].sender.id == user.id ? conversations[currentConvo].recipient.username : conversations[currentConvo].sender.username)
-  }, [conversations])
+  }, [conversations, currentConvo])
  
 
   useEffect(async () => {
@@ -57,6 +57,18 @@ export default function MessagesContainer() {
     }
   }, []);
 
+  const moveToTop = (convoId) => {
+    const sort = conversations.filter(convo => convo.id == convoId);
+    const newConvo = [sort, ...conversations.filter(convo => convo.id !== convoId)];
+    setConversations(newConvo)
+  }
+
+  const handleConvoClick = (e) => {
+    // moveToTop(e)
+    setCurrentConvo(e)
+    
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -67,7 +79,7 @@ export default function MessagesContainer() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <ConversationBar user={user} conversations={conversations} />
+      <ConversationBar  handleClick={handleConvoClick} user={user} conversations={conversations} />
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Messages convo={conversations[currentConvo]} user={user}/>

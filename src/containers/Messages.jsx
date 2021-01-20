@@ -41,5 +41,5 @@ export default function Messages(props) {
   }, [props]);
 
   // Only one component used for display
-  return <MuiChat chatController={chatCtl} />;
+  return <MuiChat id="chatput" chatController={chatCtl} />;
 }
