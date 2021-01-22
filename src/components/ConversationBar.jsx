@@ -50,9 +50,9 @@ export default function ConversationBar(props) {
         <List>
           {props.conversations.map((convo, index) => {
               return(
-                  <div>
-                  <ListItem button onClick={() => props.handleClick(index)}>
-                      <ListItemText primary={(convo.sender.id == props.user.id ? convo.recipient.username : convo.sender.username)}/>
+                  <div key={index}>
+                  <ListItem button onClick={() => props.handleClick(convo.id)}>
+                      <ListItemText primary={(convo.sender.id === props.user.id ? convo.recipient.username : convo.sender.username)}/>
                   </ListItem>
                   <Divider />
                   </div>

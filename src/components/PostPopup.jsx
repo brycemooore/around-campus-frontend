@@ -9,6 +9,8 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import axios from 'axios'
+import {useHistory} from 'react-router-dom'
 
 const styles = (theme) => ({
   root: {
@@ -51,6 +53,24 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function PostPopup(props) {
+  const history = useHistory()
+
+  const handleMessages = async () => {
+    try{
+      const res = await axios.get('/conversations/' + props.post.user.id)
+      console.log(res.data)
+      props.handleClose()
+      history.push({
+        pathname: '/messages',
+        state: {
+          idForConvo: res.data[0].id
+        }
+      });
+    }
+    catch(errors){
+      console.log(errors)
+    }
+  }
 
   return (
     <div>
@@ -70,7 +90,7 @@ export default function PostPopup(props) {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.handleClose} color="primary">
+          <Button autoFocus onClick={handleMessages} color="primary">
             Message
           </Button>
         </DialogActions>

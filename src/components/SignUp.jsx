@@ -84,6 +84,7 @@ export default function SignUp() {
         debugger
         setUser({...res.data.user})
         localStorage.token = res.data.jwt
+        axios.defaults.headers.common["Authorization"] = "Bearer " + res.data.jwt
         setLoggedIn(true)
         history.push('/home')
       }

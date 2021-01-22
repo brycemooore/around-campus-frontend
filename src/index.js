@@ -11,6 +11,7 @@ axios.defaults.baseURL = "http://127.0.0.1:3001";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.token;
 
+
 axios.interceptors.request.use(
   (request) => {
     console.log(request);
@@ -37,14 +38,12 @@ axios.interceptors.response.use(
 );
 
 ReactDOM.render(
-  <React.StrictMode>
     <RecoilRoot>
       <Router>
         <RecoilizeDebugger />
         <App />
       </Router>
-    </RecoilRoot>
-  </React.StrictMode>,
+    </RecoilRoot>,
   document.getElementById("root")
 );
 

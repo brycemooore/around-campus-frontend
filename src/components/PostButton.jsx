@@ -16,8 +16,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
-      position: "fixed"
     },
+    position: "fixed",
+    bottom: "10px",
+    right: "10px"
   },
   extendedIcon: {
     marginRight: theme.spacing(1),

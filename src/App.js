@@ -35,9 +35,8 @@ function App() {
     [prefersDarkMode],
   );
 
-  useMemo(async () => {
+  useEffect(async () => {
     if (localStorage.token) {
-
       setLoggedIn(true);
       const res = await axios.get("/current_user");
       setCurrentUser(res.data);

@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MessagesContainer() {
+export default function MessagesContainer(props) {
   const classes = useStyles();
   const [conversations, setConversations] = useState([{messages: [], sender: {username: ''}, recipient:{username: ''}}]);
   const [currentConvo, setCurrentConvo] = useState(0);
@@ -44,9 +44,16 @@ export default function MessagesContainer() {
   const user = useRecoilValue(UserState);
 
   useEffect(() => {
-    setHeader(conversations[currentConvo].sender.id == user.id ? conversations[currentConvo].recipient.username : conversations[currentConvo].sender.username)
+    setHeader(conversations[currentConvo].sender.id === user.id ? conversations[currentConvo].recipient.username : conversations[currentConvo].sender.username)
   }, [conversations, currentConvo])
- 
+
+  useEffect(() =>{
+    if(conversations[0].sender.username !== ''){
+        if(props.location.state) {
+            handleConvoClick(props.location.state.idForConvo)
+        }
+    }
+  }, [conversations])
 
   useEffect(async () => {
     try {
@@ -57,15 +64,18 @@ export default function MessagesContainer() {
     }
   }, []);
 
-  const moveToTop = (convoId) => {
-    const sort = conversations.filter(convo => convo.id == convoId);
-    const newConvo = [sort, ...conversations.filter(convo => convo.id !== convoId)];
-    setConversations(newConvo)
-  }
+//   const moveToTop = (convoId) => {
+//     const sort = conversations.filter(convo => convo.id == convoId);
+//     const newConvo = [sort, ...conversations.filter(convo => convo.id !== convoId)];
+//     setConversations(newConvo)
+//   }
 
   const handleConvoClick = (e) => {
     // moveToTop(e)
-    setCurrentConvo(e)
+    const convo = conversations.find(conversation => conversation.id === e)
+    const index = conversations.indexOf(convo)
+    // debugger
+    setCurrentConvo(index)
     
   }
 
