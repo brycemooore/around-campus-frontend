@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import SignUp from "./components/SignUp";
 import { Switch, Route, useHistory } from "react-router-dom";
-import MainApp from "./containers/MainApp";
+import UserApp from "./containers/UserApp";
 import { useSetRecoilState} from "recoil";
 import loggedInState from "./atoms/loggedInAtom";
 import userState from "./atoms/userAtom";
@@ -13,6 +13,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import PostPage from './components/PostPopup'
 import MessagesContainer from './containers/MessagesContainer'
+
+
 
 function App() {
   const setLoggedIn = useSetRecoilState(loggedInState);
@@ -45,6 +47,7 @@ function App() {
     }
   }, []);
 
+
   return (
     <div>
     <ThemeProvider theme={theme}>
@@ -53,7 +56,7 @@ function App() {
         <Route exact path="/" component={Welcome} />
         <Route path="/signup" component={SignUp} />
         <Route path="/login" component={Login} />
-        <Route path="/home" component={MainApp} />
+        <Route path="/home" component={UserApp} />
         <Route path="/posts/:id" component={PostPage} />
         <Route path="/messages" component={MessagesContainer} />
       </Switch>
