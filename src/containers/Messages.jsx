@@ -40,6 +40,17 @@ export default function Messages(props) {
     });
   }, [props]);
 
+//   React.useEffect(() => {
+//       if(props.message){
+//         const message = {
+//             type: 'text',
+//             content: props.message.body,
+//             self: props.message.user_id == props.user.id
+//         }
+//         chatCtl.addMessage(message)
+//       }
+//   },[props.message])
+
   // Only one component used for display
   return <MuiChat id="chatput" chatController={chatCtl} />;
 }

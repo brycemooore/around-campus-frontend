@@ -31,11 +31,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function MainApp() {
+
   const user = useRecoilValue(userState);
   const loggedIn = useRecoilValue(LoggedInState);
   const classes = useStyles();
   const [posts, setPosts] = useState([]);
-  let connection
+  let connection;
   const { enqueueSnackbar, closeSnackbar} = useSnackbar();
   const history = useHistory()
 
@@ -99,10 +100,13 @@ export default function MainApp() {
   
   useEffect(() => {
     getPosts()
+    return () => {
+      connection.unsubscribe();
+    };
   }, [])
 
   useEffect(() => {
-    if(user.username){
+    if(user){
       createSocket()
     }
   }, [user])

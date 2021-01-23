@@ -9,6 +9,8 @@ import ConversationBar from "../components/ConversationBar";
 import UserState from "../atoms/userAtom";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
+import ActionCable from 'actioncable'
+
 
 const drawerWidth = 240;
 
@@ -41,7 +43,43 @@ export default function MessagesContainer(props) {
   const [conversations, setConversations] = useState([{messages: [], sender: {username: ''}, recipient:{username: ''}}]);
   const [currentConvo, setCurrentConvo] = useState(0);
   const [header, setHeader] = useState('')
+//   const [message, setMessage] = useState({})
   const user = useRecoilValue(UserState);
+  let connection;
+
+  const createSocket = () => {
+    const cable = ActionCable.createConsumer(
+      "ws://localhost:3001/" + "cable"
+    );
+    connection = cable.subscriptions.create(
+      { channel: "ChatChannel", user_id: user.id },
+      {
+        connected: () => console.log("connected"),
+        received: (data) => {
+          handleDataFromConnection(data);
+        },
+      }
+    );
+  };
+
+//   const getNewConvo = (input) => {
+//         return conversations.map(conversation => {
+//             if(conversation.id === input.message.conversation_id){
+//                 return {...conversation, messages: [...conversation.messages, input.message]}
+//             }
+//             return conversation
+//         })
+//     }
+
+  const handleDataFromConnection = (input) =>{
+      alert(input.message)
+    // const newConvo = getNewConvo(input)
+    // console.log(newConvo)
+    // setConversations(newConvo)
+    // if(input.message.conversation_id == conversations[currentConvo].id){
+    //     setMessage(input.message)
+    // }
+  }
 
   useEffect(() => {
     setHeader(conversations[currentConvo].sender.id === user.id ? conversations[currentConvo].recipient.username : conversations[currentConvo].sender.username)
@@ -55,12 +93,21 @@ export default function MessagesContainer(props) {
     }
   }, [conversations])
 
+  useEffect(() => {
+      if(user){
+          createSocket()
+      }
+  }, [user])
+
   useEffect(async () => {
     try {
       const res = await axios.get("/conversations");
       setConversations(res.data);
     } catch (error) {
       console.log(error);
+    }
+    return () => {
+        connection.unsubscribe()
     }
   }, []);
 
