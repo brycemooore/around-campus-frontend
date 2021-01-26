@@ -40,7 +40,7 @@ axios.interceptors.response.use(
 ReactDOM.render(
     <RecoilRoot>
       <Router>
-        <RecoilizeDebugger />
+        {/* <RecoilizeDebugger /> */}
         <App />
       </Router>
     </RecoilRoot>,

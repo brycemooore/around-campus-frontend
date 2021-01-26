@@ -52,6 +52,7 @@ export default function PostButton(props) {
         const res = await axios.post('/posts', post)
         props.addPost(res.data)
         handleClose()
+        setErrors({})
     }
     catch(error){
         setErrors(error.response.data)

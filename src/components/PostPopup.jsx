@@ -11,6 +11,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios'
 import {useHistory} from 'react-router-dom'
+import {useRecoilValue} from 'recoil'
+import userState from '../atoms/userAtom'
 
 const styles = (theme) => ({
   root: {
@@ -54,6 +56,7 @@ const DialogActions = withStyles((theme) => ({
 
 export default function PostPopup(props) {
   const history = useHistory()
+  const user = useRecoilValue(userState)
 
   const handleMessages = async () => {
     try{
@@ -70,6 +73,13 @@ export default function PostPopup(props) {
     catch(errors){
       console.log(errors)
     }
+  }
+
+  const handleDelete = async() => {
+    const res = await axios.delete('posts/' + props.post.id)
+    console.log(props.frontId)
+    props.remove(props.frontId)
+    props.handleClose()
   }
 
   return (
@@ -90,9 +100,13 @@ export default function PostPopup(props) {
           </Typography>
         </DialogContent>
         <DialogActions>
+          {(props.post.user.id === user.id ? 
+          <Button autoFocus onClick={handleDelete} color="primary">
+            Delete
+          </Button> :
           <Button autoFocus onClick={handleMessages} color="primary">
             Message
-          </Button>
+          </Button> )}
         </DialogActions>
       </Dialog>
     </div>

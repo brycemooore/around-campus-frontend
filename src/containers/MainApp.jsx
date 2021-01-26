@@ -85,8 +85,14 @@ export default function MainApp() {
 
   const generatePosts = () => {
     return posts.map((post, index) => {
-      return <Post  key={index} post={post}/>
+      return <Post remove={removePost} frontId={index} key={index} post={post}/>
     })
+  }
+
+  const removePost = (index) => {
+    const newPosts = [...posts]
+    newPosts.splice(index, 1)
+    setPosts(newPosts)
   }
 
   const addPost = (post) => {
@@ -101,6 +107,7 @@ export default function MainApp() {
   useEffect(() => {
     getPosts()
     return () => {
+      console.log("cleaned up")
       connection.unsubscribe();
     };
   }, [])

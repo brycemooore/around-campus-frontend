@@ -43,13 +43,13 @@ export default function MessagesContainer(props) {
   const [conversations, setConversations] = useState([{messages: [], sender: {username: ''}, recipient:{username: ''}}]);
   const [currentConvo, setCurrentConvo] = useState(0);
   const [header, setHeader] = useState('')
-//   const [message, setMessage] = useState({})
+  const [loading, setLoading] = useState(true)
   const user = useRecoilValue(UserState);
   let connection;
 
   const createSocket = () => {
     const cable = ActionCable.createConsumer(
-      "ws://localhost:3001/" + "cable"
+      "ws://localhost:3001/cable"
     );
     connection = cable.subscriptions.create(
       { channel: "ChatChannel", user_id: user.id },
@@ -59,45 +59,54 @@ export default function MessagesContainer(props) {
           handleDataFromConnection(data);
         },
       }
+
     );
+    console.log(connection)
   };
 
-//   const getNewConvo = (input) => {
-//         return conversations.map(conversation => {
-//             if(conversation.id === input.message.conversation_id){
-//                 return {...conversation, messages: [...conversation.messages, input.message]}
-//             }
-//             return conversation
-//         })
-//     }
+  const findConvoById = (id) => {
+    let key
+    conversations.find((conversation, index) => {
+      if (conversation.id === id){
+        key = index
+        return true
+      } else{
+        return false
+      }
+  })
+  return key;
+}
 
-  const handleDataFromConnection = (input) =>{
-      alert(input.message)
-    // const newConvo = getNewConvo(input)
-    // console.log(newConvo)
-    // setConversations(newConvo)
-    // if(input.message.conversation_id == conversations[currentConvo].id){
-    //     setMessage(input.message)
-    // }
-  }
+
+const handleDataFromConnection = (input) =>{
+  const index = findConvoById(input.message.conversation_id)
+  let tempConvo = conversations[index]
+  let temp = [...tempConvo.messages, input.message]
+  let tempConvos = conversations.slice()
+  tempConvos[index].messages = temp 
+  setConversations(tempConvos)
+}
 
   useEffect(() => {
     setHeader(conversations[currentConvo].sender.id === user.id ? conversations[currentConvo].recipient.username : conversations[currentConvo].sender.username)
-  }, [conversations, currentConvo])
+  }, [currentConvo])
 
   useEffect(() =>{
     if(conversations[0].sender.username !== ''){
         if(props.location.state) {
             handleConvoClick(props.location.state.idForConvo)
         }
-    }
-  }, [conversations])
-
-  useEffect(() => {
-      if(user){
-          createSocket()
+        if(user && !loading){
+          console.log(!connection)
+          if(!connection){
+            createSocket()
+            console.log(!connection)
+          } 
       }
-  }, [user])
+    }
+    setHeader(conversations[currentConvo].sender.id === user.id ? conversations[currentConvo].recipient.username : conversations[currentConvo].sender.username)
+    setLoading(false)
+  }, [conversations])
 
   useEffect(async () => {
     try {
@@ -106,10 +115,9 @@ export default function MessagesContainer(props) {
     } catch (error) {
       console.log(error);
     }
-    return () => {
-        connection.unsubscribe()
-    }
   }, []);
+
+
 
 //   const moveToTop = (convoId) => {
 //     const sort = conversations.filter(convo => convo.id == convoId);
@@ -122,6 +130,7 @@ export default function MessagesContainer(props) {
     const convo = conversations.find(conversation => conversation.id === e)
     const index = conversations.indexOf(convo)
     // debugger
+    console.log(connection)
     setCurrentConvo(index)
     
   }

@@ -47,7 +47,7 @@ export default function Post(props) {
         />
       </ListItem>
       <Divider />
-      <PostPopup date={date} open={postOpen} handleClose={handleClose} post={props.post}/>
+      <PostPopup frontId={props.frontId} remove={props.remove} date={date} open={postOpen} handleClose={handleClose} post={props.post}/>
     </div>
   );
 }
