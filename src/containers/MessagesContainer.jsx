@@ -13,6 +13,7 @@ import ActionCable from 'actioncable'
 
 
 const drawerWidth = 240;
+let connection;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,13 +46,14 @@ export default function MessagesContainer(props) {
   const [header, setHeader] = useState('')
   const [loading, setLoading] = useState(true)
   const user = useRecoilValue(UserState);
-  let connection;
+  // const [connection, setConnection] = useState()
+
 
   const createSocket = () => {
     const cable = ActionCable.createConsumer(
       "ws://localhost:3001/cable"
     );
-    connection = cable.subscriptions.create(
+    connection = (cable.subscriptions.create(
       { channel: "ChatChannel", user_id: user.id },
       {
         connected: () => console.log("connected"),
@@ -60,8 +62,7 @@ export default function MessagesContainer(props) {
         },
       }
 
-    );
-    console.log(connection)
+    ));
   };
 
   const findConvoById = (id) => {
@@ -116,6 +117,19 @@ const handleDataFromConnection = (input) =>{
       console.log(error);
     }
   }, []);
+  
+  useEffect(() => {
+    return () => {
+      console.log("cleanup")
+      console.log(connection)
+      connection.unsubscribe()
+      connection = undefined
+    }
+  }, [])
+
+  // useEffect(() => {
+  //   console.log(connection, "debug")
+  // }, [connection])
 
 
 
@@ -148,7 +162,7 @@ const handleDataFromConnection = (input) =>{
       <ConversationBar  handleClick={handleConvoClick} user={user} conversations={conversations} />
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <Messages convo={conversations[currentConvo]} user={user}/>
+        <Messages updateConvo={handleDataFromConnection} convo={conversations[currentConvo]} user={user}/>
       </main>
     </div>
   );

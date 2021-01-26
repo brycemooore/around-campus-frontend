@@ -22,6 +22,8 @@ export default function Messages(props) {
                 content: res.data.body,
                 self: res.data.user_id == props.user.id,
             }
+            const rock = {message: res.data}
+            await props.updateConvo(rock)
         }
         catch(error){
             console.log(error)
