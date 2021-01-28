@@ -33,6 +33,11 @@ function App() {
             main: "#85FFC7",
           }
         },
+        typography: {
+          fontFamily: [
+            'Poppins',
+          ].join(','),
+        }
       }),
     [prefersDarkMode],
   );

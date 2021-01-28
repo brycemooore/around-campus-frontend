@@ -16,8 +16,22 @@ import userState from "../atoms/userAtom";
 import { useHistory } from "react-router-dom";
 import LoggedInState from "../atoms/loggedInAtom";
 import { Link as LinkTo } from "react-router-dom";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import CircularProgress from "@material-ui/core/CircularProgress";
+// import Autocomplete from "@material-ui/lab/Autocomplete";
+// import CircularProgress from "@material-ui/core/CircularProgress";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+
+const schoolOptions = [
+  { name: "Virgina Tech", id: 1 },
+  { name: "University of Virgina", id: 2 },
+  { name: "George Mason University", id: 3 },
+  { name: "Virgina Commonwealth University", id: 4 },
+  { name: "Christopher Newport University", id: 5 },
+  { name: "Old Dominion University", id: 6 },
+];
 
 function Copyright() {
   return (
@@ -54,7 +68,18 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
+
+const genMenu = () => {
+  return schoolOptions.map((school, index) => {
+    return <MenuItem key={index} value={school}>{school.name}</MenuItem>;
+  });
+};
 
 export default function SignUp() {
   const classes = useStyles();
@@ -67,11 +92,13 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [password_confirmation, setPasswordConfirm] = useState("");
   const [stateUser, setUser] = useRecoilState(userState);
+  const [schoolId, setSchoolId] = useState()
   const history = useHistory();
   const [errors, setErrors] = useState({});
   const [loggedIn, setLoggedIn] = useRecoilState(LoggedInState);
   let count = 0;
   const [options, setOptions] = useState([]);
+  const [form, setForm] = useState('School')
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
@@ -86,7 +113,7 @@ export default function SignUp() {
     };
 
     try {
-      const res = await axios.post("/signup", { user, school_id: 1 });
+      const res = await axios.post("/signup", { user, school_id: schoolId });
       debugger;
       setUser({ ...res.data.user });
       localStorage.token = res.data.jwt;
@@ -100,13 +127,13 @@ export default function SignUp() {
   };
 
   const schools = async (e) => {
-    if (count == 5) {
+    if (count === 5) {
       count = 0;
       const string = e.target.value;
       string.replace(" ", "%20");
       console.log(string);
       const newUrl = url + "&school.name=" + string + "&_fields=school.name,id";
-      if (string == "") return;
+      if (string === "") return;
       fetch(newUrl)
         .then((res) => res.json())
         .then(setOptions);
@@ -157,17 +184,21 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="school"
-                label="School"
-                type="school"
-                id="school"
-                autoComplete="school"
-                onChange={schools}
-              />
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Schools</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={form ? form.name : ''}
+                  onChange={(e) => {
+                    setForm(e.target.value)
+                    setSchoolId(e.target.value.id)
+                  }
+                }
+                >
+                  {genMenu()}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
